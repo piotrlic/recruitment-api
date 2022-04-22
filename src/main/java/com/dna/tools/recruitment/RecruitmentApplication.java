@@ -1,13 +1,16 @@
-package com.dna.tools.recruitmentapi;
+package com.dna.tools.recruitment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RecruitmentApiApplication {
+public class RecruitmentApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RecruitmentApiApplication.class, args);
+
+        SpringApplication.run(RecruitmentApplication.class, args);
+
+
     }
 
 }
