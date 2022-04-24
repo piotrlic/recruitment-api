@@ -11,5 +11,4 @@ public class CreateUserDTO {
     private String login;
     private String password;
     private String name;
-    private LocalDate creationDate;
 }
