@@ -17,12 +17,13 @@ public class JobOfferController {
 
     @PostMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void create(JobOffer jobOffer){
+    public void create(@RequestBody JobOffer jobOffer){
         jobOfferService.create(jobOffer);
 
     }
 
     @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
+    @ResponseStatus(code = HttpStatus.OK)
     public List<JobOffer> getValidJobOffers(@RequestParam String userName, @RequestParam JobCategory jobCategory){
         validateFilters(userName, jobCategory);
 

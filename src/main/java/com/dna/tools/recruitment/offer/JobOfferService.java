@@ -1,5 +1,6 @@
 package com.dna.tools.recruitment.offer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -8,15 +9,20 @@ import java.util.List;
 @Component
 public class JobOfferService {
 
+    private final JobOfferMapper jobOfferMapper;
+
+    public JobOfferService(JobOfferMapper jobOfferMapper) {
+        this.jobOfferMapper = jobOfferMapper;
+    }
 
     public void create(JobOffer jobOffer) {
+            jobOfferMapper.saveJobOffer(jobOffer);
     }
 
     public List<JobOffer> getValidJobOffers(OffersFilters offersFilters) {
-        return List.of(JobOffer.builder().category(JobCategory.COURIER).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).userName("Piotrek").build(),
-                JobOffer.builder().category(JobCategory.FOOD_AND_DRINKS).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).userName("Roman").build(),
-                JobOffer.builder().category(JobCategory.SHOP_ASSISTANT).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).userName("Pawel").build()
-                );
+
+//        var userId =
+        return jobOfferMapper.getAllValidOffers();
     }
 }
 

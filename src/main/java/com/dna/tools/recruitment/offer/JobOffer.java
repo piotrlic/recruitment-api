@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class JobOffer {
+    private Long id;
+    private Long userId;
     private JobCategory category;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String userName;
 }
