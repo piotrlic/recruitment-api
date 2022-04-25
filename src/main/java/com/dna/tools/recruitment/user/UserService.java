@@ -17,14 +17,19 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    public void create(CreateUserDTO createUserDTO) {
-        User user = User.builder()
+    public ReadUserDTO create(CreateUserDTO createUserDTO) {
+        var user = User.builder()
                 .name(createUserDTO.getName())
                 .login(createUserDTO.getLogin())
                 .password(passwordEncoder.encode(createUserDTO.getPassword()))
                 .creationDate(LocalDateTime.now())
                 .build();
-        userRepository.create(user);
+        userRepository.create(user); // H2 does not return ID while inserting. ;(
+        return ReadUserDTO.builder()
+                .name(user.getName())
+                .login(user.getLogin())
+                .creationDate(user.getCreationDate())
+                .build();
     }
 
     public void update(UpdateUserDTO request) {

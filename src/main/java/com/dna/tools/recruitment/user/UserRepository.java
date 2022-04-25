@@ -12,7 +12,7 @@ interface UserRepository {
     @Select("SELECT id, login, name, creation_date as creationDate from USERS")
     List<ReadUserDTO> getAllUsers();
 
-    @Insert("INSERT INTO USERS (login, password_hash, name, creation_date) VALUES (#{login}, #{password}, #{name}, #{creationDate}) ")
+    @Insert("INSERT INTO USERS (login, password_hash, name, creation_date) VALUES (#{login}, #{password}, #{name}, #{creationDate})")
     void create(User user);
 
     @Update("UPDATE USERS SET name = #{name} WHERE login = #{login} ")

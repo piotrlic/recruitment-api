@@ -25,17 +25,15 @@ public class UserController {
 
     @PostMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<Object> create(@RequestBody CreateUserDTO request){
-
-        userService.create(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ReadUserDTO> create(@RequestBody CreateUserDTO request){
+        return ResponseEntity.ok(userService.create(request));
     }
 
 
     @PutMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<Object> update(@RequestBody UpdateUserDTO request){
-        validateRequest(request);
+        validateUpdateRequest(request);
             userService.update(request);
             return ResponseEntity.ok().build();
 
@@ -59,11 +57,10 @@ public class UserController {
 
     @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
     public List<ReadUserDTO> getAllUsers(){
-
         return userService.getAllUsers();
     }
 
-    private void validateRequest(UpdateUserDTO request) {
+    private void validateUpdateRequest(UpdateUserDTO request) {
         Preconditions.checkNotNull(request);
         Preconditions.checkNotNull(request.getLogin());
         Preconditions.checkNotNull(request.getName());
