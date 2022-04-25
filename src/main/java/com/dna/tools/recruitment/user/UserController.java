@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /* TODO
@@ -27,8 +25,8 @@ public class UserController {
 
     @PostMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<Object> create(@RequestBody RequestUserDTO request){
-        validateRequest(request);
+    public ResponseEntity<Object> create(@RequestBody CreateUserDTO request){
+
         userService.create(request);
         return ResponseEntity.ok().build();
     }
@@ -36,44 +34,38 @@ public class UserController {
 
     @PutMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Object> update(@RequestBody RequestUserDTO request){
+    public ResponseEntity<Object> update(@RequestBody UpdateUserDTO request){
         validateRequest(request);
-        try {
             userService.update(request);
             return ResponseEntity.ok().build();
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+
     }
 
     @GetMapping(value = "/{login}", produces = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public UserDTO get(@PathVariable String login){
+    public ReadUserDTO get(@PathVariable String login){
         Preconditions.checkNotNull(login);
         return userService.getUser(login).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with login %s not found", login)));
     }
 
 
-    @DeleteMapping(value = "/{login}", produces = "application/json; charset=UTF-8")
+    @DeleteMapping(value = "/{userId}", produces = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Object> delete(@PathVariable String login){
-
-        userService.delete(login);
+    public ResponseEntity<Object> delete(@PathVariable Long userId){
+        userService.delete(userId);
         return ResponseEntity.ok().build();
     }
 
-    @Deprecated
     @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
-    public List<UserDTO> getAllUsers(){
-        List<UserDTO> users = new ArrayList<>();
-        users.add(new UserDTO("abc","Piotr", LocalDateTime.now()));
-        return users;
+    public List<ReadUserDTO> getAllUsers(){
+
+        return userService.getAllUsers();
     }
 
-    private void validateRequest(RequestUserDTO request) {
+    private void validateRequest(UpdateUserDTO request) {
         Preconditions.checkNotNull(request);
         Preconditions.checkNotNull(request.getLogin());
-        Preconditions.checkNotNull(request.getPassword());
+        Preconditions.checkNotNull(request.getName());
     }
 }

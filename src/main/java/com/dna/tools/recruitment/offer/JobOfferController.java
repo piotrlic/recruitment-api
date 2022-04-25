@@ -17,24 +17,18 @@ public class JobOfferController {
 
     @PostMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void create(@RequestBody JobOffer jobOffer){
+    public void create(@RequestBody final CreateJobOfferDTO jobOffer){
         jobOfferService.create(jobOffer);
-
     }
 
     @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<JobOffer> getValidJobOffers(@RequestParam String userName, @RequestParam JobCategory jobCategory){
-        validateFilters(userName, jobCategory);
-
+    public List<JobOffer> getValidJobOffers(@RequestParam(required=false) final String userName,
+                                            @RequestParam(required=false) final JobCategory jobCategory){
         return jobOfferService.getValidJobOffers(buildFilters(userName, jobCategory));
     }
 
-    private OffersFilters buildFilters(String userName, JobCategory jobCategory) {
+    private OffersFilters buildFilters(final String userName, final JobCategory jobCategory) {
         return OffersFilters.builder().userName(userName).jobCategory(jobCategory).build();
-    }
-
-    private void validateFilters(String name, JobCategory jobCategory) {
-
     }
 }

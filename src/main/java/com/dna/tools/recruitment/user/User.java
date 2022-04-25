@@ -3,10 +3,13 @@ package com.dna.tools.recruitment.user;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
+import java.time.LocalDateTime;
+
 @Builder
-public class RequestUserDTO {
+@Data
+public class User {
     private String login;
     private String password;
     private String name;
+    private LocalDateTime creationDate;
 }

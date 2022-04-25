@@ -1,28 +1,32 @@
 package com.dna.tools.recruitment.offer;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dna.tools.recruitment.offer.exception.UserNotFoundException;
+import com.dna.tools.recruitment.user.UserService;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 public class JobOfferService {
 
-    private final JobOfferMapper jobOfferMapper;
+    private final JobOfferRepository jobOfferRepository;
 
-    public JobOfferService(JobOfferMapper jobOfferMapper) {
-        this.jobOfferMapper = jobOfferMapper;
+    private final UserService userService;
+
+    public JobOfferService(final JobOfferRepository jobOfferRepository, final UserService userService) {
+        this.jobOfferRepository = jobOfferRepository;
+        this.userService = userService;
     }
 
-    public void create(JobOffer jobOffer) {
-            jobOfferMapper.saveJobOffer(jobOffer);
+    public void create(final CreateJobOfferDTO jobOffer) {
+            jobOfferRepository.saveJobOffer(jobOffer);
     }
 
-    public List<JobOffer> getValidJobOffers(OffersFilters offersFilters) {
+    public List<JobOffer> getValidJobOffers(final OffersFilters offersFilters) {
 
-//        var userId =
-        return jobOfferMapper.getAllValidOffers();
+        return userService.getUserIdByName(offersFilters.getUserName())
+                .map(id -> jobOfferRepository.getAllValidOffers(id, offersFilters.getJobCategory()))
+                .orElse(List.of());
     }
 }
 
