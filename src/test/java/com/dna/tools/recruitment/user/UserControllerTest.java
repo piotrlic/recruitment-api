@@ -6,6 +6,8 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 
 public class UserControllerTest {
 
@@ -13,9 +15,13 @@ public class UserControllerTest {
     public static final String TEST_NAME = "name";
     public static final String TEST_PASSWORD = "xxx";
     private static final String NEW_NAME = "newName";
+    private static final Long TEST_USER_ID=314L;
+    private static final LocalDateTime TEST_CREATION_DATE = LocalDateTime.now();
+    private static final ReadUserDTO TEST_USER = ReadUserDTO.builder().id(TEST_USER_ID).login(TEST_LOGIN)
+            .name(TEST_NAME).creationDate(TEST_CREATION_DATE).build();
 
     @Test
-    public void shouldCreateUserWIthStatusOk(){
+    public void shouldCreateUserWithStatusOk(){
         //Given
         var userRepository = Mockito.mock(UserRepository.class);
         var passWordEncoder = Mockito.mock(PasswordEncoder.class);
@@ -35,12 +41,13 @@ public class UserControllerTest {
         Assert.assertNotNull(body);
         Assert.assertEquals(TEST_LOGIN, body.getLogin());
         Assert.assertEquals(TEST_NAME, body.getName());
+        Assert.assertNotNull(body.getCreationDate());
         Mockito.verify(passWordEncoder).encode(TEST_PASSWORD);
         Mockito.verify(userRepository).create(Mockito.any());
     }
 
     @Test
-    public void shouldUpdateUserWIthStatusOk(){
+    public void shouldUpdateUserWithStatusOk(){
         //Given
         var userRepository = Mockito.mock(UserRepository.class);
         var passWordEncoder = Mockito.mock(PasswordEncoder.class);
@@ -56,6 +63,43 @@ public class UserControllerTest {
         //Then
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
         Mockito.verify(userRepository).update(user);
+    }
+
+    @Test
+    public void shouldDeleteUserWithStatusOk(){
+        //Given
+        var userRepository = Mockito.mock(UserRepository.class);
+        var passWordEncoder = Mockito.mock(PasswordEncoder.class);
+        var userService = new UserService(userRepository, passWordEncoder);
+        var userController = new UserController(userService);
+        //When
+        var response = userController.delete(TEST_USER_ID);
+
+        //Then
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Mockito.verify(userRepository).delete(TEST_USER_ID);
+        var body = response.getBody();
+        Assert.assertNotNull(body);
+        Assert.assertEquals(TEST_USER_ID, body);
+    }
+
+    @Test
+    public void shouldGetUserWithStatusOk(){
+        //Given
+        var userRepository = Mockito.mock(UserRepository.class);
+        Mockito.when(userRepository.getUserByLogin(TEST_LOGIN)).thenReturn(TEST_USER);
+        var passWordEncoder = Mockito.mock(PasswordEncoder.class);
+        var userService = new UserService(userRepository, passWordEncoder);
+        var userController = new UserController(userService);
+        //When
+        var response = userController.get(TEST_LOGIN);
+
+        //Then
+        Mockito.verify(userRepository).getUserByLogin(TEST_LOGIN);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(TEST_LOGIN, response.getLogin());
+        Assert.assertEquals(TEST_NAME, response.getName());
+        Assert.assertEquals(TEST_CREATION_DATE, response.getCreationDate());
     }
 
     @Test
