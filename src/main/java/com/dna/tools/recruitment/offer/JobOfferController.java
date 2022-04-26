@@ -20,6 +20,7 @@ public class JobOfferController {
     @PostMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<CreateJobOfferDTO> create(@RequestBody final CreateJobOfferDTO jobOffer){
+        //user is provided with jobOffer entity but when we have authentication we could use already authenticated user.
         if (!validateJobOffer(jobOffer)){
             return ResponseEntity.badRequest().build();
         }

@@ -13,14 +13,14 @@ interface UserRepository {
     List<ReadUserDTO> getAllUsers();
 
     @Insert("INSERT INTO USERS (login, password_hash, name, creation_date) VALUES (#{login}, #{password}, #{name}, #{creationDate})")
-    void create(User user);
+    void create(final User user);
 
     @Update("UPDATE USERS SET name = #{name} WHERE login = #{login} ")
-    void update(UpdateUserDTO user);
+    void update(final UpdateUserDTO user);
 
     @Delete("DELETE FROM USERS WHERE id = #{id} ")
-    void delete(Long id);
+    void delete(final Long id);
 
     @Select("SELECT id, login, name, creation_date as creationDate from USERS where login = #{login}")
-    ReadUserDTO getUserByLogin(String login);
+    ReadUserDTO getUserByLogin(final String login);
 }

@@ -6,12 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
 @RunWith(SpringRunner.class)
-@TestPropertySource(locations = "classpath:application-test.properties")
 public class UserControllerTest {
 
     public static final String TEST_LOGIN = "test";
@@ -39,5 +37,7 @@ public class UserControllerTest {
         Assert.assertNotNull(body);
         Assert.assertEquals(TEST_LOGIN, body.getLogin());
         Assert.assertEquals(TEST_NAME, body.getName());
+        Mockito.verify(passWordEncoder).encode(TEST_PASSWORD);
+        Mockito.verify(userRepository).create(Mockito.any());
     }
 }

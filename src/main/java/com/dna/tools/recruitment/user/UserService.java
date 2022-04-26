@@ -10,14 +10,14 @@ import java.util.Optional;
 @Component
 public class UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     public UserService(final UserRepository userRepository,
                        final PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    public ReadUserDTO create(CreateUserDTO createUserDTO) {
+    public ReadUserDTO create(final CreateUserDTO createUserDTO) {
         var user = User.builder()
                 .name(createUserDTO.getName())
                 .login(createUserDTO.getLogin())
@@ -32,11 +32,11 @@ public class UserService {
                 .build();
     }
 
-    public void update(UpdateUserDTO request) {
+    public void update(final UpdateUserDTO request) {
         userRepository.update(request);
     }
 
-    public void delete(Long userId) {
+    public void delete(final Long userId) {
         userRepository.delete(userId);
     }
 

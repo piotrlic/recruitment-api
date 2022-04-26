@@ -20,13 +20,13 @@ public class UserController {
 
     @PostMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<ReadUserDTO> create(@RequestBody CreateUserDTO request){
+    public ResponseEntity<ReadUserDTO> create(@RequestBody final CreateUserDTO request){
         return ResponseEntity.ok(userService.create(request));
     }
 
     @PutMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Object> update(@RequestBody UpdateUserDTO request){
+    public ResponseEntity<Object> update(@RequestBody final UpdateUserDTO request){
         validateUpdateRequest(request);
         userService.update(request);
         return ResponseEntity.ok().build();
@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping(value = "/{login}", produces = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public ReadUserDTO get(@PathVariable String login){
+    public ReadUserDTO get(@PathVariable final String login){
         Preconditions.checkNotNull(login);
         return userService.getUser(login).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with login %s not found", login)));
@@ -44,7 +44,7 @@ public class UserController {
 
     @DeleteMapping(value = "/{userId}", produces = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Long> delete(@PathVariable Long userId){
+    public ResponseEntity<Long> delete(@PathVariable final Long userId){
         userService.delete(userId);
         return ResponseEntity.ok(userId);
     }
