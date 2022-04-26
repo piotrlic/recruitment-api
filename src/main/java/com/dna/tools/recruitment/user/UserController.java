@@ -8,11 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-/* TODO
-     1. Add all 4 CRUD methods (create, update, delete, get user by login)
-     2. Add validation to all the methods.
-     3. Prepare responses with errors.
-      */
 @RestController
 @RequestMapping("/v1/users")
 public class UserController {
@@ -29,13 +24,12 @@ public class UserController {
         return ResponseEntity.ok(userService.create(request));
     }
 
-
     @PutMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<Object> update(@RequestBody UpdateUserDTO request){
         validateUpdateRequest(request);
-            userService.update(request);
-            return ResponseEntity.ok().build();
+        userService.update(request);
+        return ResponseEntity.ok().build();
 
     }
 
@@ -50,9 +44,9 @@ public class UserController {
 
     @DeleteMapping(value = "/{userId}", produces = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Object> delete(@PathVariable Long userId){
+    public ResponseEntity<Long> delete(@PathVariable Long userId){
         userService.delete(userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(userId);
     }
 
     @GetMapping(value = "/", produces = "application/json; charset=UTF-8")

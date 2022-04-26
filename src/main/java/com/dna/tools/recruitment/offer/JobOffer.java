@@ -13,4 +13,6 @@ public class JobOffer {
     private JobCategory category;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+
 }
