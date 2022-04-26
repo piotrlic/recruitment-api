@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 
 @RunWith(SpringRunner.class)
@@ -19,6 +20,8 @@ public class JobOfferControllerTest {
     private static final List<JobOffer> ALL_JOB_OFFERS =
             List.of(JobOffer.builder().id(1L).build(), JobOffer.builder().id(2L).build());
     private static final String DUMMY_USER_NAME = "userNameDummy";
+    private static final String CORRECT_USER_NAME = "correctUserName";
+    private static final Long ID_OF_CORRECT_USER = 199L;
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Test
@@ -88,18 +91,44 @@ public class JobOfferControllerTest {
     }
 
     @Test
+    public void shouldReturnOffersBasedOnFiltering(){
+        //Given
+        var jobOfferRepository = Mockito.mock(JobOfferRepository.class);
+        var jobCategeory = JobCategory.IT;
+
+        Mockito.when(jobOfferRepository.getAllValidOffers(ID_OF_CORRECT_USER, jobCategeory)).thenReturn(ALL_JOB_OFFERS);
+
+        var userService = Mockito.mock(UserService.class);
+        Mockito.when(userService.getUserIdByName(CORRECT_USER_NAME)).thenReturn(Optional.of(ID_OF_CORRECT_USER));
+
+        JobOfferController jobOfferController = setupController(jobOfferRepository, userService);
+
+        //When
+        var response = jobOfferController.getValidJobOffers(CORRECT_USER_NAME, jobCategeory);
+
+        //Then
+        Assert.assertEquals(ALL_JOB_OFFERS, response);
+        Mockito.verify(jobOfferRepository).getAllValidOffers(ID_OF_CORRECT_USER, jobCategeory);
+    }
+
+    @Test
     public void shouldReturnEmptyListWhenUserNotFound(){
         //Given
         var jobOfferRepository = Mockito.mock(JobOfferRepository.class);
         var userService = Mockito.mock(UserService.class);
         JobOfferController jobOfferController = setupController(jobOfferRepository, userService);
+        // just to test if offers are not returned.
         Mockito.when(jobOfferRepository.getAllValidOffers(null, null)).thenReturn(ALL_JOB_OFFERS);
+        Mockito.when(userService.getUserIdByName(DUMMY_USER_NAME)).thenReturn(Optional.empty());
+
         //When
         var response = jobOfferController.getValidJobOffers(DUMMY_USER_NAME, null);
 
         //Then
         Assert.assertTrue(response.isEmpty());
+        Mockito.verifyNoInteractions(jobOfferRepository);
     }
+
 
     private JobOfferController setupController(final JobOfferRepository jobOfferRepository, final UserService userService) {
         var jobOfferService = new JobOfferService(jobOfferRepository, userService);
