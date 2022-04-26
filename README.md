@@ -23,7 +23,7 @@ I focused on basic functionality to prepare it for frontend team to be used.
 #What more should be added
 - Replace H2 with other DB implementation 
 - Liquibase or other DB versioning system (currently DDL with example data is in data.sql file)
-- Integration tests to check functionalities on real DB
+- Unit test and Integration tests to check functionalities on real DB
 - Swagger to show API to the potential users
 - create separate authentication service based on OAuth 
 
