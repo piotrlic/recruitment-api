@@ -2,19 +2,15 @@ package com.dna.tools.recruitment.offer;
 
 import com.dna.tools.recruitment.user.UserService;
 import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-
-@RunWith(SpringRunner.class)
 public class JobOfferControllerTest {
 
     private static final List<JobOffer> ALL_JOB_OFFERS =

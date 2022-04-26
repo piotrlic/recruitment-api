@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -27,7 +28,9 @@ public class UserController {
     @PutMapping(consumes = "application/json; charset=UTF-8")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<Object> update(@RequestBody final UpdateUserDTO request){
-        validateUpdateRequest(request);
+        if (!validateUpdateRequest(request)){
+            return ResponseEntity.badRequest().build();
+        }
         userService.update(request);
         return ResponseEntity.ok().build();
 
@@ -54,9 +57,9 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    private void validateUpdateRequest(UpdateUserDTO request) {
-        Preconditions.checkNotNull(request);
-        Preconditions.checkNotNull(request.getLogin());
-        Preconditions.checkNotNull(request.getName());
+    private boolean validateUpdateRequest(UpdateUserDTO request) {
+        return !Objects.isNull(request)
+                && !Objects.isNull(request.getLogin())
+                && !Objects.isNull(request.getName());
     }
 }
